@@ -1,45 +1,91 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
-import QtQuick.Controls.Material 2.2
-import QtQuick.Layouts 1.3
-import QtQuick.Controls.Styles 1.4
+//Import the declarative plugins
+ import QtQuick 2.0
 
-Button {
-    id: buttonHomeSide
-    width: 206
-    height: 45
-    text: qsTr("Home")
-    flat: false
-    font.letterSpacing: 0.5
-    checkable: true
-    font.bold: false
-    font.pointSize: 10
-    autoRepeat: false
-    autoExclusive: false
-    checked: true
-    background: Rectangle {
-        color: rectangle.color
-        implicitWidth: 200
-        implicitHeight: 40
-        border.color: rectangle.color
-        border.width: 1
-        radius: 4
-    }
-    contentItem: Text {
-        color: buttonHomeSide.checked ? "#13f5da" : "#b1aaaa"
-        text: "Home"
-        font.letterSpacing: 1
-        font.wordSpacing: 0
-        font.capitalization: Font.MixedCase
-        font.weight: Font.ExtraLight
-        font.bold: false
-        font.pointSize: 14
-        font.family: "Encode Sans"
-        renderType: Text.QtRendering
-        textFormat: Text.AutoText
-        opacity: enabled ? 1.0 : 0.3
-        horizontalAlignment: Text.AlignLeft
-        verticalAlignment: Text.AlignVCenter
-        elide: Text.ElideRight
-    }
-}
+ //Implementation of the Button control.
+ Item {
+     id: button
+     width: 200
+     height: 200
+     property alias buttonText: innerText.text;
+     property color color: "#117272"
+     property color hoverColor: "#aaaaaa"
+     property color pressColor: "slategray"
+     property int fontSize: 10
+     property int borderWidth: 1
+     property int borderRadius: 2
+     scale: state === "Pressed" ? 0.96 : 1.0
+     onEnabledChanged: state = ""
+     signal clicked
+
+
+     //Rectangle to draw the button
+     Rectangle {
+         id: rectangleButton
+         anchors.fill: parent
+         radius: borderRadius
+         border.width: borderWidth
+         border.color: "black"
+
+         Text {
+             id: innerText
+             font.pointSize: fontSize
+             anchors.centerIn: parent
+         }
+     }
+
+
+     //define a scale animation
+     Behavior on scale {
+         NumberAnimation {
+             duration: 100
+             easing.type: Easing.InOutQuad
+         }
+     }
+     //change the color of the button in differen button states
+     states: [
+         State {
+             name: "Hovering"
+
+             PropertyChanges {
+                 target: rectangleButton
+                 color: "#44dfd7"
+             }
+         },
+         State {
+             name: "Pressed"
+             PropertyChanges {
+                 target: rectangleButton
+                 color: "#00005b56"
+             }
+         }
+     ]
+
+     //define transmission for the states
+     transitions: [
+         Transition {
+             from: ""; to: "Hovering"
+             ColorAnimation { duration: 200 }
+         },
+         Transition {
+             from: "*"; to: "Pressed"
+             ColorAnimation { duration: 10 }
+         }
+     ]
+
+     //Mouse area to react on click events
+     MouseArea {
+         hoverEnabled: true
+         anchors.fill: button
+         onEntered: { button.state='Hovering'}
+         onExited: { button.state=''}
+         onClicked: { button.clicked();}
+         onPressed: { button.state="Pressed" }
+         onReleased: {
+             if (containsMouse)
+               button.state="Hovering";
+             else
+               button.state="";
+         }
+     }
+
+ }

@@ -1,4 +1,4 @@
-import QtQuick 2.4
+import QtQuick 2.9
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.2
 
@@ -6,9 +6,9 @@ HistoryForm {
     id: form
 
     function readData() {
-        CustomerModel.selection.forEach(function (rowIndex) {
+        PatientModel.selection.forEach(function (rowIndex) {
 
-            var history = CustomerModel.get(rowIndex).history
+            var history = PatientModel.get(rowIndex).history
             var entries = history.split("~")
 
             form.tableView.model.clear()
@@ -27,7 +27,7 @@ HistoryForm {
     }
 
     Connections {
-        target: CustomerModel.selection
+        target: PatientModel.selection
         onSelectionChanged: form.readData()
     }
 

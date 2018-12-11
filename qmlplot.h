@@ -2,6 +2,8 @@
 #define QMLPLOT_H
 
 #include <QtQuick>
+#include "qcustomplot.h"
+
 class QCustomPlot;
 class QCPAbstractPlottable;
 
@@ -30,11 +32,13 @@ protected:
     virtual void timerEvent(QTimerEvent *event);
 
 private:
-    QCustomPlot*         m_CustomPlot;
+    QCustomPlot*         mPlot;
     int                  m_timerId;
+    QPointer<QCPGraph> mGraph1;
+    QPointer<QCPGraph> mGraph2;
+    bool rescaleXFlag;
 
 private slots:
-    void graphClicked( QCPAbstractPlottable* plottable );
     void onCustomReplot();
     void updateCustomPlotSize();
 

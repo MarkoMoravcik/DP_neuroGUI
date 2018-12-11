@@ -1,5 +1,5 @@
 
-import QtQuick 2.4
+import QtQuick 2.9
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.2
 
@@ -18,7 +18,7 @@ Item {
     property alias zipCode: zipCode
     property alias city: city
     property alias phoneNumber: phoneNumber
-    property alias customerId: customerId
+    property alias patientId: patientId
     property alias email: email
     property alias lastName: lastName
     property alias firstName: firstName
@@ -181,7 +181,7 @@ Item {
 
         Label {
             id: label9
-            text: qsTr("Customer Id")
+            text: qsTr("Patient Id")
         }
 
         Item {
@@ -192,7 +192,7 @@ Item {
         }
 
         TextField {
-            id: customerId
+            id: patientId
             Layout.columnSpan: 7
             Layout.fillWidth: true
             placeholderText: qsTr("id")

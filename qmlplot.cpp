@@ -3,7 +3,7 @@
 #include <QDebug>
 
 CustomPlotItem::CustomPlotItem( QQuickItem* parent ) : QQuickPaintedItem( parent )
-    , m_CustomPlot( nullptr ), m_timerId( 0 )
+    , mPlot( nullptr ), m_timerId( 0 ), rescaleXFlag(true)
 {
     setFlag( QQuickItem::ItemHasContents, true );
     setAcceptedMouseButtons( Qt::AllButtons );
@@ -14,8 +14,8 @@ CustomPlotItem::CustomPlotItem( QQuickItem* parent ) : QQuickPaintedItem( parent
 
 CustomPlotItem::~CustomPlotItem()
 {
-    delete m_CustomPlot;
-    m_CustomPlot = nullptr;
+    delete mPlot;
+    mPlot = nullptr;
 
     if(m_timerId != 0) {
         killTimer(m_timerId);
@@ -24,33 +24,45 @@ CustomPlotItem::~CustomPlotItem()
 
 void CustomPlotItem::initCustomPlot()
 {
-    m_CustomPlot = new QCustomPlot();
-
+    mPlot = new QCustomPlot();
     updateCustomPlotSize();
-    m_CustomPlot->addGraph();
-    m_CustomPlot->graph( 0 )->setPen( QPen( Qt::red ) );
-    m_CustomPlot->xAxis->setLabel( "t" );
-    m_CustomPlot->yAxis->setLabel( "S" );
-    m_CustomPlot->xAxis->setRange( 0, 10 );
-    m_CustomPlot->yAxis->setRange( 0, 5 );
-    m_CustomPlot ->setInteractions( QCP::iRangeDrag | QCP::iRangeZoom );
+    mPlot->setBackground(QColor(221, 221, 222));
 
-    startTimer(500);
+    mPlot->rescaleAxes();
+    mPlot->yAxis->setTickLabels(true);
+    //connect(mPlot->yAxis2, SIGNAL(rangeChanged(QCPRange)), mPlot->yAxis, SLOT(setRange(QCPRange))); // left axis only mirrors inner right axis
+    mPlot->yAxis2->setVisible(false);
+    mPlot->yAxis->setLabel("Voltage (uV)");
+    mPlot->xAxis->setLabel("Time (mS)");
 
-    connect( m_CustomPlot, &QCustomPlot::afterReplot, this, &CustomPlotItem::onCustomReplot );
+    mPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
-    m_CustomPlot->replot();
+    mPlot->axisRect()->addAxis(QCPAxis::atRight);
+    mPlot->axisRect()->axis(QCPAxis::atRight, 1)->setVisible(false);
+
+    mGraph1 = mPlot->addGraph(mPlot->xAxis, mPlot->axisRect()->axis(QCPAxis::atRight, 0));
+    mGraph2 = mPlot->addGraph(mPlot->xAxis, mPlot->axisRect()->axis(QCPAxis::atRight, 0));
+    mGraph1->setPen(QPen(QColor(250, 120, 0)));
+    mGraph2->setPen(QPen(QColor(0, 180, 60)));
+
+    connect(mPlot->xAxis, SIGNAL(rangeChanged(QCPRange)), mPlot->xAxis2, SLOT(setRange(QCPRange)));
+    connect(mPlot->yAxis, SIGNAL(rangeChanged(QCPRange)), mPlot->yAxis2, SLOT(setRange(QCPRange)));
+    startTimer(5);
+
+    connect( mPlot, &QCustomPlot::afterReplot, this, &CustomPlotItem::onCustomReplot );
+
+    mPlot->replot();
 }
 
 
 void CustomPlotItem::paint( QPainter* painter )
 {
-    if (m_CustomPlot)
+    if (mPlot)
     {
         QPixmap    picture( boundingRect().size().toSize() );
         QCPPainter qcpPainter( &picture );
 
-        m_CustomPlot->toPainter( &qcpPainter );
+        mPlot->toPainter( &qcpPainter );
 
         painter->drawPixmap( QPoint(), picture );
     }
@@ -58,13 +70,13 @@ void CustomPlotItem::paint( QPainter* painter )
 
 void CustomPlotItem::mousePressEvent( QMouseEvent* event )
 {
-    qDebug() << Q_FUNC_INFO;
+    //qDebug() << Q_FUNC_INFO;
     routeMouseEvents( event );
 }
 
 void CustomPlotItem::mouseReleaseEvent( QMouseEvent* event )
 {
-    qDebug() << Q_FUNC_INFO;
+    //qDebug() << Q_FUNC_INFO;
     routeMouseEvents( event );
 }
 
@@ -75,7 +87,10 @@ void CustomPlotItem::mouseMoveEvent( QMouseEvent* event )
 
 void CustomPlotItem::mouseDoubleClickEvent( QMouseEvent* event )
 {
-    qDebug() << Q_FUNC_INFO;
+    //qDebug() << Q_FUNC_INFO;
+    if (rescaleXFlag == false) {
+        rescaleXFlag = true;
+    } else rescaleXFlag = false;
     routeMouseEvents( event );
 }
 
@@ -86,43 +101,45 @@ void CustomPlotItem::wheelEvent( QWheelEvent *event )
 
 void CustomPlotItem::timerEvent(QTimerEvent *event)
 {
-    static double t, U;
-    U = ((double)rand() / RAND_MAX) * 5;
-    m_CustomPlot->graph(0)->addData(t, U);
-    qDebug() << Q_FUNC_INFO << QString("Adding dot t = %1, S = %2").arg(t).arg(U);
-    t++;
-    m_CustomPlot->replot();
+    // calculate and add a new data point to each graph:
+    mGraph1->addData(mGraph1->dataCount(), qSin(mGraph1->dataCount()/50.0)+qSin(mGraph1->dataCount()/50.0/0.3843)*0.25);
+    mGraph2->addData(mGraph2->dataCount(), qCos(mGraph2->dataCount()/50.0)+qSin(mGraph2->dataCount()/50.0/0.4364)*0.15);
+
+    if (rescaleXFlag == true)
+        mPlot->xAxis->rescale();
+
+    mGraph1->rescaleValueAxis(true, true);
+    mGraph2->rescaleValueAxis(true, true);
+    mPlot->xAxis->setRange(mPlot->xAxis->range().upper, 300, Qt::AlignRight);
+
+    mPlot->replot();
 }
 
-void CustomPlotItem::graphClicked( QCPAbstractPlottable* plottable )
-{
-    qDebug() << Q_FUNC_INFO << QString( "Clicked on graph '%1 " ).arg( plottable->name() );
-}
 
 void CustomPlotItem::routeMouseEvents( QMouseEvent* event )
 {
-    if (m_CustomPlot)
+    if (mPlot)
     {
         QMouseEvent* newEvent = new QMouseEvent( event->type(), event->localPos(), event->button(), event->buttons(), event->modifiers() );
-        QCoreApplication::postEvent( m_CustomPlot, newEvent );
+        QCoreApplication::postEvent( mPlot, newEvent );
     }
 }
 
 void CustomPlotItem::routeWheelEvents( QWheelEvent* event )
 {
-    if (m_CustomPlot)
+    if (mPlot)
     {
         QWheelEvent* newEvent = new QWheelEvent( event->pos(), event->delta(), event->buttons(), event->modifiers(), event->orientation() );
-        QCoreApplication::postEvent( m_CustomPlot, newEvent );
+        QCoreApplication::postEvent( mPlot, newEvent );
     }
 }
 
 void CustomPlotItem::updateCustomPlotSize()
 {
-    if (m_CustomPlot)
+    if (mPlot)
     {
-        m_CustomPlot->setGeometry(0, 0, (int)width(), (int)height());
-        m_CustomPlot->setViewport(QRect(0, 0, (int)width(), (int)height()));
+        mPlot->setGeometry(0, 0, (int)width(), (int)height());
+        mPlot->setViewport(QRect(0, 0, (int)width(), (int)height()));
     }
 }
 

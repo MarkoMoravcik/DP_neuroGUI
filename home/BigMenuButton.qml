@@ -4,10 +4,10 @@
  //Implementation of the Button control.
  Item {
      id: button
-     width: 30
-     height: 30
+     width: 200
+     height: 200
      property alias buttonText: innerText.text;
-     property color color: "white"
+     property color color: "#117272"
      property color hoverColor: "#aaaaaa"
      property color pressColor: "slategray"
      property int fontSize: 10

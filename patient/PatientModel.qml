@@ -1,12 +1,12 @@
 
 pragma Singleton
 
-import QtQuick 2.4
+import QtQuick 2.9
 
 ListModel {
     property QtObject selection
     ListElement {
-        customerId: "15881123"
+        patientId: "15881123"
         firstName: "Julia"
         title: "Ms."
         lastName: "Jefferson"
@@ -15,12 +15,12 @@ ListModel {
         city: "Toronto"
         zipCode: "92334"
         phoneNumber: "0803-033330"
-        notes: "Very demanding customer."
+        notes: "Very demanding patient."
         history: "21.4.2014|Order|coffee~23.4.2014|Order|poster~29.4.2014|Invoice|poster 40$~05.5.2014|Overdue Notice|poster 40$"
     }
 
     ListElement {
-        customerId: "29993496"
+        patientId: "29993496"
         firstName: "Tim"
         lastName: "Northington"
         title: "Mr."
@@ -29,12 +29,12 @@ ListModel {
         city: "San Jose"
         zipCode: "95112"
         phoneNumber: "09000-3330"
-        notes: "Very good customer."
+        notes: "Very good patient."
         history: "18.4.2014|Order|orange juice~23.4.2014|Order|chair~24.4.2014|Complaint|Chair is broken."
     }
 
     ListElement {
-        customerId: "37713567"
+        patientId: "37713567"
         firstName: "Daniel"
         lastName: "Krumm"
         title: "Mr."
@@ -43,12 +43,12 @@ ListModel {
         city: "Berlin"
         zipCode: "12334"
         phoneNumber: "0708093330"
-        notes: "This customer has a lot of Complaintts."
+        notes: "This patient has a lot of Complaintts."
         history: "15.4.2014|Order|table~25.4.2014|Return|table~28.4.2014|Complaint|Table had wrong color."
     }
 
     ListElement {
-        customerId: "45817387"
+        patientId: "45817387"
         firstName: "Sandra"
         lastName: "Booth"
         title: "Ms."
@@ -57,12 +57,12 @@ ListModel {
         city: "San Francisco"
         zipCode: "94103"
         phoneNumber: "0103436370"
-        notes: "This customer is not paying."
+        notes: "This patient is not paying."
         history: "22.4.2014|Order|coffee~23.4.2014|Order|smartphone~29.4.2014|Invoice|smartphone 200$~05.5.2014|Overdue Notice|smartphone 200$"
     }
 
     ListElement {
-        customerId: "588902396"
+        patientId: "588902396"
         firstName: "Lora"
         lastName: "Beckner"
         title: "Ms."
@@ -71,12 +71,12 @@ ListModel {
         city: "Los Angeles"
         zipCode: "90086"
         phoneNumber: "0903436360"
-        notes: "This customer usually pays late."
+        notes: "This patient usually pays late."
         history: "17.4.2014|Order|soft drink~23.4.2014|Order|computer~29.4.2014|Invoice|computer 1200$~07.5.2014|Overdue Notice|computer 1200$"
     }
 
     ListElement {
-        customerId: "67873693"
+        patientId: "67873693"
         firstName: "Daniel"
         lastName: "Krumm"
         title: "Mr."
@@ -85,12 +85,12 @@ ListModel {
         city: "Berlin"
         zipCode: "12334"
         phoneNumber: "0303033330"
-        notes: "This customer has a lot of Complaints."
+        notes: "This patient has a lot of Complaaints."
         history: "23.4.2014|Order|jacket~25.4.2014|Return|jacket~28.4.2014|Complaint|Jacket had wrong color."
     }
 
     ListElement {
-        customerId: "78885693"
+        patientId: "78885693"
         firstName: "Vanessa"
         lastName: "Newbury"
         title: "Ms."

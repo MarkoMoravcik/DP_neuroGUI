@@ -1,5 +1,48 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>patient/Patient.qml</file>
+        <file>patient/PatientForm.ui.qml</file>
+        <file>patient/History.qml</file>
+        <file>patient/HistoryForm.ui.qml</file>
+        <file>patient/Settings.qml</file>
+        <file>patient/SettingsForm.ui.qml</file>
+        <file>patient/PatientModel.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>home/BigMenuButton.qml</file>
+        <file>home/Home.qml</file>
+        <file>home/HomeForm.ui.qml</file>
+        <file>welcome/SidePanelForm.ui.qml</file>
+        <file>welcome/WelcomeForm.ui.qml</file>
+        <file>home/SignalsSelect.qml</file>
+        <file>home/SignalsSelectForm.ui.qml</file>
+        <file>fonts/OpenSans-Light.ttf</file>
+        <file>fonts/OpenSans-Regular.ttf</file>
+        <file>fonts/Raleway-Light.ttf</file>
+        <file>fonts/Raleway-Regular.ttf</file>
+        <file>signals/VEP.qml</file>
+        <file>signals/VEPForm.ui.qml</file>
+        <file>welcome/ButtonHomeSide.qml</file>
+        <file>signals/BEAP.qml</file>
+        <file>signals/BEAPForm.ui.qml</file>
+        <file>signals/PlotView.qml</file>
+        <file>welcome/Welcome.qml</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file>icons/brainIcon.png</file>
+        <file>icons/earIcon.png</file>
+        <file>icons/eyeIcon.png</file>
+        <file>icons/measurementesHistoryIcon.png</file>
+        <file>icons/muscleIcon.png</file>
+        <file>icons/patientDatabaseIcon.png</file>
+        <file>icons/signalIcon.png</file>
+        <file>icons/spinalIcon.png</file>
+        <file>icons/aboutIcon.png</file>
+        <file>icons/resetIcon.png</file>
+        <file>icons/runIcon.png</file>
+        <file>icons/checkerIcon.png</file>
+        <file>icons/flashIcon.png</file>
+        <file>icons/printerIcon.png</file>
+        <file>icons/speakerIcon.png</file>
     </qresource>
 </RCC>
